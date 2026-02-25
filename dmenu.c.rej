@@ -1,32 +1,18 @@
 diff a/dmenu.c b/dmenu.c	(rejected hunks)
-@@ -53,6 +54,21 @@ static XIC xic;
- static Drw *drw;
- static Clr *scheme[SchemeLast];
+@@ -29,6 +29,7 @@ enum { SchemeNorm, SchemeSel, SchemeOut, SchemeLast }; /* color schemes */
  
-+/* Xresources preferences */
-+enum resource_type {
-+	STRING = 0,
-+	INTEGER = 1,
-+	FLOAT = 2
-+};
-+typedef struct {
-+	char *name;
-+	enum resource_type type;
-+	void *dst;
-+} ResourcePref;
-+
-+static void load_xresources(void);
-+static void resource_load(XrmDatabase db, char *name, enum resource_type rtype, void *dst);
-+
- #include "config.h"
- 
- static int (*fstrncmp)(const char *, const char *, size_t) = strncmp;
-@@ -395,7 +411,7 @@ keypress(XKeyEvent *ev)
- 
- 	switch(ksym) {
- 	default:
--insert:
-+	insert:
- 		if (!iscntrl(*buf))
- 			insert(buf, len);
- 		break;
+ struct item {
+ 	char *text;
++	unsigned int width;
+ 	struct item *left, *right;
+ 	int out;
+ };
+@@ -733,6 +759,8 @@ main(int argc, char *argv[])
+ 			topbar = 0;
+ 		else if (!strcmp(argv[i], "-f"))   /* grabs keyboard before reading stdin */
+ 			fast = 1;
++		else if (!strcmp(argv[i], "-c"))   /* centers dmenu on screen */
++			centered = 1;
+ 		else if (!strcmp(argv[i], "-i")) { /* case-insensitive item matching */
+ 			fstrncmp = strncasecmp;
+ 			fstrstr = cistrstr;
